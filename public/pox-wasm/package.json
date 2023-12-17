@@ -1,0 +1,14 @@
+{
+  "name": "proof-of-exploit",
+  "version": "0.1.0",
+  "files": [
+    "proof_of_exploit_bg.wasm",
+    "proof_of_exploit.js",
+    "proof_of_exploit.d.ts"
+  ],
+  "module": "proof_of_exploit.js",
+  "types": "proof_of_exploit.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

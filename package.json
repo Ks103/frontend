@@ -12,7 +12,8 @@
     "axios": "^1.6.2",
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "pox-wasm": "file:public/pox-wasm"
   },
   "devDependencies": {
     "@types/node": "^20",
