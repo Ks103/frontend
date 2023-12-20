@@ -7,7 +7,7 @@ export async function getFromIpfs(ipfsHash: string): Promise<Proof> {
   return proof
 }
 
-function checkProofProperties(obj: any) {
+export function checkProofProperties(obj: any) {
   assert.equal(typeof obj, 'object', 'not an object')
   assert.equal(typeof obj.version, 'string', 'version is not a string')
   assert.equal(typeof obj.degree, 'number')
