@@ -1,5 +1,5 @@
 import assert from 'assert'
-import ipfs from './ipfs'
+import * as ipfs from './ipfs'
 
 export async function getFromIpfs(ipfsHash: string): Promise<Proof> {
   let proof = await ipfs.get(ipfsHash, 'json')

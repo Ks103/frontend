@@ -1,14 +1,48 @@
 'use client'
 
+import { buf2array, hex2array } from '@/utils/data-convert'
+import * as ipfs from '@/utils/ipfs'
 import Image from 'next/image'
 import { useEffect } from 'react'
+
+let val = false
 
 export default function Home() {
   useEffect(() => {
     ;(async () => {
-      const wasm = await import('pox-wasm')
+      if (val) return
+      val = true
+      await new Promise((resolve) => setTimeout(resolve, 5000))
+      console.log('start')
+
+      const general_params = await ipfs.get(
+        'QmeJngu5KuP4NjCimnkZjoGHt5xUY2eSmoADiZTf6WUwHG',
+        'arraybuffer'
+      )
+      const cvk = await ipfs.get(
+        'QmWGqxjCWrReL3WQy86g56dJ1hKY9miB91rnjLzHeeGivo',
+        'arraybuffer'
+      )
+      const proof = await ipfs.getProof(
+        'QmbWhhLdRsG5kGcvBsnFJKuVvbUoUXaSdu4hTtG14YkBLY'
+      )
+      // console.log(proof, hex2array(proof.data))
+
+      const wasm = await import('../wasm')
       await wasm.default()
-      console.log('wasm_module', wasm.add(1, 2))
+
+      console.log('verifying proof')
+      console.time('verify')
+      let result = wasm.verify(
+        hex2array(proof.data),
+        buf2array(general_params),
+        buf2array(cvk),
+        hex2array(proof.instances[0][0]),
+        hex2array(proof.instances[0][1])
+      )
+      console.timeEnd('verify')
+      console.log('result', result)
+      console.log('verify done')
     })()
   }, [])
 
