@@ -16,6 +16,7 @@ export function checkProofProperties(obj: any) {
 export interface Proof {
   version: string
   degree: number
+  summary?: string
   data: string
   instances: Array<Array<string>>
   circuit_params: {

@@ -6,6 +6,7 @@ import * as ipfs from '@/utils/ipfs'
 import { buf2array, hex2array } from '@/utils/data-convert'
 import { Proof, checkProofProperties } from '@/utils/proof'
 import { getSrsCid } from '@/utils/srs'
+import ProofDisplay from '@/components/ProofDisplay'
 
 type Props = {
   params: { contentAddress: string }
@@ -13,6 +14,7 @@ type Props = {
 
 export default function VerifyProof({ params }: Props) {
   let [display, setDisplay] = useState<string>('')
+  let [proof, setProof] = useState<Proof>()
 
   useEffect(() => {
     ;(async () => {
@@ -37,6 +39,7 @@ export default function VerifyProof({ params }: Props) {
       try {
         checkProofProperties(json)
         proof = json
+        setProof(proof)
       } catch {
         setDisplay('IPFS content does not seem to be a zk proof')
         return
@@ -66,8 +69,11 @@ export default function VerifyProof({ params }: Props) {
       }
 
       setDisplay('Verifying proof...')
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
       let result: boolean
       try {
+        // TODO move to worker cuz this is blocking execution
         const wasm = await import('../../../wasm/proof_of_exploit')
         await wasm.default()
         console.time('verify')
@@ -87,7 +93,7 @@ export default function VerifyProof({ params }: Props) {
       }
 
       if (result) {
-        setDisplay('Proof verified!')
+        setDisplay('Proof verifies!')
       } else {
         setDisplay('Proof does not verify!')
       }
@@ -96,9 +102,11 @@ export default function VerifyProof({ params }: Props) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      hash {params.contentAddress}
+      Proof {params.contentAddress}
       <br />
       {display}
+      <br />
+      {proof ? <ProofDisplay proof={proof} /> : null}
     </main>
   )
 }

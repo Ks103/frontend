@@ -16,7 +16,9 @@ export default function ProofInput() {
       setValidCid(true)
 
       if (router) {
-        router.push('/verify/' + input)
+        setTimeout(() => {
+          router.push('/verify/' + input)
+        }, 500)
       }
     } catch {
       setValidCid(false)
