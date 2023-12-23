@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <Container>
+        <Container fluid>
           <div className={inter.className}>{children}</div>
         </Container>
       </body>

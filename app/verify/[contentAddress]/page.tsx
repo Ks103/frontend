@@ -7,13 +7,17 @@ import { buf2array, hex2array } from '@/utils/data-convert'
 import { Proof, checkProofProperties } from '@/utils/proof'
 import { getSrsCid } from '@/utils/srs'
 import SyntaxHighlighter from 'react-syntax-highlighter'
+import { Alert, Col, Container, Row } from 'react-bootstrap'
 
 type Props = {
   params: { contentAddress: string }
 }
 
 export default function VerifyProof({ params }: Props) {
-  let [display, setDisplay] = useState<string>('')
+  let [display, setDisplay] = useState('')
+  let [alertVariant, setAlertVariant] = useState<
+    'warning' | 'success' | 'danger'
+  >('warning')
   let [proof, setProof] = useState<Proof>()
 
   useEffect(() => {
@@ -44,6 +48,8 @@ export default function VerifyProof({ params }: Props) {
         setDisplay('IPFS content does not seem to be a zk proof')
         return
       }
+
+      // TODO perform further code in a child component, so that this component can render server side.
 
       let srsCid = getSrsCid(proof.degree)
 
@@ -94,56 +100,51 @@ export default function VerifyProof({ params }: Props) {
 
       if (result) {
         setDisplay('Proof verifies!')
+        setAlertVariant('success')
       } else {
         setDisplay('Proof does not verify!')
+        setAlertVariant('danger')
       }
     })()
   }, [params.contentAddress])
-
+  console.log(proof)
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Proof {params.contentAddress}
       <br />
-      {display}
-      <br />
+      <Alert key={alertVariant} variant={alertVariant}>
+        {display}
+      </Alert>
       {proof ? (
-        <div>
-          <div
-            style={{
-              border: 'solid',
-              borderColor: 'white',
-              padding: '1rem',
-              margin: '1rem 0 1rem',
-            }}
-          >
-            Summary: {proof.summary}
-          </div>
-          <div
-            style={{
-              border: 'solid',
-              borderColor: 'white',
-              padding: '1rem',
-              margin: '1rem 0 1rem',
-            }}
-          >
-            Public Data <br />
-            Chain Id: {Number(proof.public_data.chain_id)} <br />
-            Block: {proof.public_data.block_constants.number} <br />
-            State Root: {proof.public_data.prev_state_root} <br />
-          </div>
-          <div>
+        <Row>
+          <Col>
+            {proof.summary ? (
+              <div>
+                Summary: <b>{proof.summary}</b>
+              </div>
+            ) : null}
+            <div
+              style={{
+                border: 'solid',
+                borderColor: 'white',
+                margin: '1rem 0',
+              }}
+            >
+              Public Data <br />
+              Chain Id: {Number(proof.public_data.chain_id)} <br />
+              Block: {proof.public_data.block_constants.number} <br />
+              State Root: {proof.public_data.prev_state_root} <br />
+            </div>
+          </Col>
+          <Col>
             {Object.entries(proof.challenge_artifact.input.sources).map(
-              (entry) => (
-                <div>
-                  {/* {entry[0]} */}
-                  <SyntaxHighlighter language="javascript">
-                    {entry[1].content}
-                  </SyntaxHighlighter>
-                </div>
+              (entry, i) => (
+                <SyntaxHighlighter language="javascript" key={i}>
+                  {entry[1].content}
+                </SyntaxHighlighter>
               )
             )}
-          </div>
-        </div>
+          </Col>
+        </Row>
       ) : null}
     </main>
   )
