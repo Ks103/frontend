@@ -7,7 +7,9 @@ import { buf2array, hex2array } from '@/utils/data-convert'
 import { Proof, checkProofProperties } from '@/utils/proof'
 import { getSrsCid } from '@/utils/srs'
 import SyntaxHighlighter from 'react-syntax-highlighter'
-import { Alert, Col, Container, Row } from 'react-bootstrap'
+import { Alert, Col, Row } from 'react-bootstrap'
+import * as solidity from '../../../utils/solidity'
+import { keccak256 } from 'ethers'
 
 type Props = {
   params: { contentAddress: string }
@@ -97,6 +99,26 @@ export default function VerifyProof({ params }: Props) {
         setDisplay('Failed to verify proof, check browser console for details')
         return
       }
+
+      setDisplay('Verifying challenge contract codehash...')
+
+      let output = await solidity.compile(
+        proof.challenge_artifact.solc_version,
+        proof.challenge_artifact.input
+      )
+      console.log(output)
+
+      let bytecode =
+        output.contracts['Challenge.sol'].Challenge.evm.deployedBytecode.object
+
+      let codehash = keccak256('0x' + bytecode)
+      if (codehash !== proof.public_data.pox_challenge_codehash) {
+        setDisplay('Challenge codehash does not match')
+        setAlertVariant('danger')
+        return
+      }
+
+      // TODO check hash of public data is equal to the zk proof instances
 
       if (result) {
         setDisplay('Proof verifies!')

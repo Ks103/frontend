@@ -18,7 +18,8 @@
     "react": "^18",
     "react-bootstrap": "^2.9.1",
     "react-dom": "^18",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-syntax-highlighter": "^15.5.0",
+    "solc": "^0.8.23-fixed"
   },
   "devDependencies": {
     "@types/node": "^20",

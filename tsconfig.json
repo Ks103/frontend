@@ -1,8 +1,8 @@
 { 
   "compilerOptions": {
     "types": ["bun-types"],
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es5", 
+    "lib": ["dom", "dom.iterable", "esnext", "WebWorker"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
