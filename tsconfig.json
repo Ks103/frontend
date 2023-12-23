@@ -1,4 +1,4 @@
-{
+{ 
   "compilerOptions": {
     "types": ["bun-types"],
     "target": "es5",

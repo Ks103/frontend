@@ -6,7 +6,7 @@ import * as ipfs from '@/utils/ipfs'
 import { buf2array, hex2array } from '@/utils/data-convert'
 import { Proof, checkProofProperties } from '@/utils/proof'
 import { getSrsCid } from '@/utils/srs'
-import ProofDisplay from '@/components/ProofDisplay'
+import SyntaxHighlighter from 'react-syntax-highlighter'
 
 type Props = {
   params: { contentAddress: string }
@@ -98,7 +98,7 @@ export default function VerifyProof({ params }: Props) {
         setDisplay('Proof does not verify!')
       }
     })()
-  }, [])
+  }, [params.contentAddress])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -106,7 +106,45 @@ export default function VerifyProof({ params }: Props) {
       <br />
       {display}
       <br />
-      {proof ? <ProofDisplay proof={proof} /> : null}
+      {proof ? (
+        <div>
+          <div
+            style={{
+              border: 'solid',
+              borderColor: 'white',
+              padding: '1rem',
+              margin: '1rem 0 1rem',
+            }}
+          >
+            Summary: {proof.summary}
+          </div>
+          <div
+            style={{
+              border: 'solid',
+              borderColor: 'white',
+              padding: '1rem',
+              margin: '1rem 0 1rem',
+            }}
+          >
+            Public Data <br />
+            Chain Id: {Number(proof.public_data.chain_id)} <br />
+            Block: {proof.public_data.block_constants.number} <br />
+            State Root: {proof.public_data.prev_state_root} <br />
+          </div>
+          <div>
+            {Object.entries(proof.challenge_artifact.input.sources).map(
+              (entry) => (
+                <div>
+                  {/* {entry[0]} */}
+                  <SyntaxHighlighter language="javascript">
+                    {entry[1].content}
+                  </SyntaxHighlighter>
+                </div>
+              )
+            )}
+          </div>
+        </div>
+      ) : null}
     </main>
   )
 }

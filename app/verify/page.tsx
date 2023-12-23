@@ -1,9 +1,5 @@
-import ProofInput from '@/components/ProofInput'
+import { redirect } from 'next/navigation'
 
 export default function Verify() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <ProofInput />
-    </main>
-  )
+  redirect('/')
 }

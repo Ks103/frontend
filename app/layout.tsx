@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { Col, Container, Row } from 'react-bootstrap'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,8 +17,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html>
+      <body>
+        <Container>
+          <div className={inter.className}>{children}</div>
+        </Container>
+      </body>
     </html>
   )
 }
