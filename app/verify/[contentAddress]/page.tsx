@@ -131,7 +131,7 @@ export default function VerifyProof({ params }: Props) {
   }, [params.contentAddress])
   console.log(proof)
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="flex min-h-screen flex-col items-center justify-between p-24" style={{ backgroundColor: 'black' }}>
       <br />
       <Alert key={alertVariant} variant={alertVariant}>
         {display}
